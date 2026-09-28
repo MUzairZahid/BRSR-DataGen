@@ -1,7 +1,7 @@
 """One design system for BRSR-DataGen figures and pages.
 
-Every colour used by the v2 README figures (make_figures_v2.py) and the Signal
-Observatory v2 page (make_observatory_v2.py) comes from this file, so the four
+Every colour used by the README figures (make_figures.py) and the Signal
+Observatory page (make_signal_observatory.py) comes from this file, so the four
 signal components look identical in the README, the GIFs and the interactive page,
 in light and in dark mode.
 

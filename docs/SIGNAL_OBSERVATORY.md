@@ -1,6 +1,90 @@
 # Signal Observatory
 
-The [interactive Signal Observatory](observatory_v2.html) explores real generator
-samples through linked radar-environment, waveform and spectrogram views.
+Open [`signal_observatory.html`](signal_observatory.html) in a browser. The page is a
+self-contained file of about 1 MB, including fonts, and works offline. The site
+root redirects to it.
 
-See the [usage, numerical conventions and build guide](SIGNAL_OBSERVATORY_V2.md).
+## Explore
+
+- Choose any of the 12 waveform classes. **Next sample** cycles through three
+  independently seeded observations per class, with fixed waveform parameters.
+- Inspect a source in the scene or overlay controls to highlight its path and its
+  actual contribution on the received waveform. Inspection does not enable a muted source.
+- Play or pause the four-stage reveal; choose a stage directly or turn looping off.
+- Adjust the full-blend target SNR from −14 to +10 dB and toggle echo, interference
+  and AWGN independently.
+- Compare clean and received waveforms on shared amplitude axes. Switch I/Q,
+  choose a time range, or drag with a mouse to zoom both plots. Double-click resets
+  the zoom. Dense solid traces use a per-pixel min/max envelope.
+- Hover a waveform for sample values. With keyboard focus, use arrows, Home/End,
+  or Shift + arrow for steps of ten samples; Escape clears the cursor.
+- Hover a spectrogram for time, frequency and power level. The readout reports
+  the computed level even when the colour scale is clipped.
+- Open the table for the visible sample range or export all 1,024 samples as CSV.
+- Choose a light or dark theme. The page starts from the system preference and
+  remembers an explicit choice locally.
+
+The mobile layout uses a vertical scene, stacked charts and collapsible corruption
+controls. Reduced-motion preference disables automatic playback and decorative
+motion. Chart summaries and keyboard cursor values have live text equivalents.
+
+## Build and verify
+
+```sh
+python scripts/make_signal_observatory.py        # self-contained page; NumPy only
+python scripts/make_figures.py            # themed figures; matplotlib + ffmpeg
+python scripts/capture_observatory.py     # preview captures; Playwright + Chromium
+python -m pytest -q
+```
+
+The page builder imports `build_data()` from `scripts/observatory_samples.py`.
+It uses the repository's waveform and artifact implementations. Edit
+`scripts/signal_observatory_template.html` for the interface and
+`scripts/brsr_palette.py` for the theme palette and component line styles.
+
+## Data and numerical conventions
+
+- Each observation contains 1,024 complex samples at 100 MHz. The stored sample
+  interval is 0–10.23 µs; the observation duration is 10.24 µs.
+- Each component is divided by the same clean RMS before storage. The page uses
+  little-endian int16 values with a per-component scale:
+  `value = integer / 32767 × scale`. This is **lossy quantisation**, not an exact
+  copy of the generator's floating-point output. The maximum error is about
+  1.53 × 10⁻⁵ of the component's largest absolute I/Q value; tests enforce a
+  conservative bound of 3.1 × 10⁻⁵. Charts, metrics, tables and exports use these
+  decoded values. Use the generator for full-precision research data.
+- These are seeded demonstration observations, not rows of the released benchmark.
+- LFM retains the benchmark's legacy amplitude convention, normalised for display.
+  Costas uses validated hops `[1, 2, 4, 3]`; Barker BPSK uses the generator's
+  linear resampling.
+- The echo is `source[start + offset + n]`, the benchmark's positive source-offset
+  convention. The building, towers, paths and particles are illustrative. No
+  physical ranges, propagation delays, antenna patterns or Doppler are simulated.
+- Each stored observation starts at −3 dB with all three artifacts. The slider
+  applies `10 ** ((−3 − target_snr) / 20)` to the fixed artifact realizations.
+  Muting a component does not redistribute its power or create another realization.
+- Measured SNR uses the actual combined complex error, including cross-terms.
+  It can differ from the requested full-blend target.
+- Both spectrograms use a 64-point symmetric Hann window, 4-sample hop and complex
+  FFT: 241 frame centres from 0.315 to 9.915 µs, and bin centres from −50 to
+  +48.4375 MHz. Both share a −40 to 0 dB colour scale relative to the clean STFT
+  peak. Pixels use nearest-neighbour rendering. Blank margins indicate no frame.
+- Shared waveform bounds include the clean signal, current mixture and enabled
+  components, so cancellation cannot clip an inspected component.
+- CSV files contain clean I/Q, enabled scaled components (zero if muted), and their
+  sum in clean-RMS units. Headers record the seed, class, target and measured SNR,
+  gains, source indices, weights, original RMS and quantisation convention.
+
+## Visual encoding
+
+The page uses blue/solid for clean, green/dashed for echo, orange/dash-dot for
+interference and grey/dotted for AWGN. The received mixture uses the text colour.
+Labels and line styles distinguish components as well as colour. Spectrograms
+use a sequential blue ramp with a labelled dB scale.
+
+README figures are separate seeded examples generated by `make_figures.py`
+using shared plotting routines in `_figure_core.py`. Their source parameters and display normalisation may differ
+from the interactive samples; they are not screenshots of those observations.
+
+Fonts are Inter and JetBrains Mono, distributed under the SIL Open Font License
+1.1. Source font files and licence information are in [`fonts/`](fonts/).

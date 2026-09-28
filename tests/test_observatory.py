@@ -1,4 +1,4 @@
-"""Verify the Signal Observatory v2 page: embedded samples, the browser's own maths and playback."""
+"""Verify the Signal Observatory page: embedded samples, the browser's own maths and playback."""
 import importlib.util
 import json
 from pathlib import Path
@@ -19,11 +19,11 @@ def load(name, path):
 
 
 def builder():
-    return load('observatory_v2', ROOT / 'scripts/make_observatory_v2.py')
+    return load('observatory', ROOT / 'scripts/make_signal_observatory.py')
 
 
 def page_source():
-    return (ROOT / 'docs/observatory_v2.html').read_text(encoding='utf-8')
+    return (ROOT / 'docs/signal_observatory.html').read_text(encoding='utf-8')
 
 
 def embedded_raw():
@@ -38,7 +38,7 @@ def pure_math(source):
 def test_embedded_samples_match_generator():
     b = builder()
     raw = embedded_raw()
-    assert raw == b.build_data(), 'page must be rebuilt with scripts/make_observatory_v2.py'
+    assert raw == b.build_data(), 'page must be rebuilt with scripts/make_signal_observatory.py'
     original = b.observatory.build_data()
     assert list(raw['records']) == list(original['records']) == b.observatory.module('waveforms').CLASS_NAMES
     worst = 0.0
@@ -119,11 +119,11 @@ console.log('Verified '+payload.cases.length+' mixtures, STFT layout and immutab
     subprocess.run([node, str(script), str(payload)], check=True, timeout=60)
 
 
-def test_observatory_v2_playback():
+def test_observatory_playback():
     node = shutil.which('node')
     if not node:
         pytest.skip('Node.js is required for the JavaScript timeline regression')
-    source = (ROOT / 'scripts' / 'observatory_v2_template.html').read_text(encoding='utf-8')
+    source = (ROOT / 'scripts' / 'signal_observatory_template.html').read_text(encoding='utf-8')
     stage = source.split('function setStage(stage){', 1)[1].split('\n', 1)[0]
     frame = source.split('function frame(now){', 1)[1].split('\nif(reduced.matches)', 1)[0]
     functions = 'function setStage(stage){' + stage + '\nfunction frame(now){' + frame
@@ -173,7 +173,7 @@ def test_component_bounds_and_atomic_sample_switch():
     node = shutil.which('node')
     if not node:
         pytest.skip('Node.js required for chart state regression')
-    source = (ROOT / 'scripts/observatory_v2_template.html').read_text(encoding='utf-8')
+    source = (ROOT / 'scripts/signal_observatory_template.html').read_text(encoding='utf-8')
     bounds = source[source.index('function setPlotLimit(){'):source.index('function drawTime(){')]
     nice = source[source.index('function niceStep('):source.index('const M=')]
     switch = source[source.index('function setWaveform(name,animate){'):source.index('/* ---- table & CSV ---- */')]
@@ -202,7 +202,7 @@ console.log('PASS: cancellation-safe bounds and atomic sample changes');
 
 
 def test_public_entry_points_and_navigation():
-    """Old links resolve to the current page without advertising retired demos."""
+    """The public entry point opens the current page and omits retired demos."""
     html = page_source()
     from html.parser import HTMLParser
 
@@ -218,8 +218,9 @@ def test_public_entry_points_and_navigation():
     assert links.hrefs.count('https://github.com/MUzairZahid/BRSR-DataGen') == 1
     assert 'radar_environment.html' not in links.hrefs
     assert 'signal_observatory.html' not in links.hrefs
-    for name in ('index.html', 'signal_observatory.html', 'radar_environment.html'):
-        assert 'url=observatory_v2.html' in (ROOT / 'docs' / name).read_text(encoding='utf-8')
+    assert 'url=signal_observatory.html' in (ROOT / 'docs/index.html').read_text(encoding='utf-8')
+    assert (ROOT / 'docs/signal_observatory.html').exists()
+    assert not (ROOT / 'docs/radar_environment.html').exists()
     readme = (ROOT / 'README.md').read_text(encoding='utf-8')
     assert 'radar_environment.gif' not in readme
     assert 'radar_environment.html' not in readme
@@ -229,7 +230,7 @@ def test_csv_export_is_consistent_and_documents_precision(tmp_path):
     node = shutil.which('node')
     if not node:
         pytest.skip('Node.js required for CSV regression')
-    source = (ROOT / 'scripts/observatory_v2_template.html').read_text(encoding='utf-8')
+    source = (ROOT / 'scripts/signal_observatory_template.html').read_text(encoding='utf-8')
     rows = source[source.index('function rows(){'):source.index('function renderTable(){')]
     export = source[source.index("$('downloadCsv').addEventListener"):source.index('/* ---- hover, cursor, brush ---- */')]
     payload = tmp_path / 'raw.json'

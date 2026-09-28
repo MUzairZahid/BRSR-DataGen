@@ -13,34 +13,34 @@ Generate synthetic complex I/Q signals for the **Blind Radar Signal Restoration 
 |---|---|---|---|
 | LFM, Costas, Barker BPSK, Frank, P1–P4, T1–T4 | 7 artifact combinations; target SNR from −14 to +10 dB by default | 1,024 complex samples at 100 MHz; separate I/Q channels | Python 3.8+ (NumPy + h5py); MATLAB without additional toolboxes |
 
-**[Explore a signal](https://muzairzahid.github.io/BRSR-DataGen/observatory_v2.html)** · **[Generate a small dataset](#quick-start)** · **[Read the output](#read-a-generated-sample)** · **[Download the published benchmark](https://doi.org/10.5281/zenodo.23010395)** · **[Cite this work](#citation)**
+**[Explore a signal](https://muzairzahid.github.io/BRSR-DataGen/signal_observatory.html)** · **[Generate a small dataset](#quick-start)** · **[Read the output](#read-a-generated-sample)** · **[Download the published benchmark](https://doi.org/10.5281/zenodo.23010395)** · **[Cite this work](#citation)**
 
 > **Generator or benchmark?** This repository generates new, seeded data using the BRSR code conventions. For reproducible comparisons with published results, use the released [BRSR benchmark on Zenodo](https://doi.org/10.5281/zenodo.23010395). The original generation was not seeded, so rerunning this generator does not recreate those exact files.
 
 ## Explore the Signal Observatory
 
 <p align="center">
-  <a href="https://muzairzahid.github.io/BRSR-DataGen/observatory_v2.html">
+  <a href="https://muzairzahid.github.io/BRSR-DataGen/signal_observatory.html">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="docs/figures/v2/observatory_hero_dark.png">
-      <img src="docs/figures/v2/observatory_hero_light.png" width="960" alt="Signal Observatory: an interactive radar environment with a transmitter, illustrative reflector, interferer and receiver noise feeding one receiver, beside a control panel for target SNR and component switches. Open the page to explore all 12 classes and compare clean and received signals.">
+      <source media="(prefers-color-scheme: dark)" srcset="docs/figures/observatory/observatory_hero_dark.png">
+      <img src="docs/figures/observatory/observatory_hero_light.png" width="960" alt="Signal Observatory: an interactive radar environment with a transmitter, illustrative reflector, interferer and receiver noise feeding one receiver, beside a control panel for target SNR and component switches. Open the page to explore all 12 classes and compare clean and received signals.">
     </picture>
   </a>
 </p>
-<p align="center"><strong><a href="https://muzairzahid.github.io/BRSR-DataGen/observatory_v2.html">Open the interactive Signal Observatory →</a></strong></p>
+<p align="center"><strong><a href="https://muzairzahid.github.io/BRSR-DataGen/signal_observatory.html">Open the interactive Signal Observatory →</a></strong></p>
 
 Explore **all 12 waveform classes**, with **three seeded observations per class**. The radar scene and the side-by-side **clean / received** waveforms and spectrograms show the same sample. Select a source to highlight its contribution in both views, adjust the target SNR, switch I/Q channels, hover or use the keyboard for sample values, drag to zoom, and export the current sample as CSV. The page uses real generator output and reports the **measured SNR** of the current mixture. The scene is a conceptual illustration of the additive model; its paths do not determine physical delays or signal gains. Controls rescale fixed generator realizations, and **Next sample** cycles through the three stored observations.
 
 <p align="center">
-  <a href="https://muzairzahid.github.io/BRSR-DataGen/observatory_v2.html">
+  <a href="https://muzairzahid.github.io/BRSR-DataGen/signal_observatory.html">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="docs/figures/v2/observatory_compare_dark.png">
-      <img src="docs/figures/v2/observatory_compare_light.png" width="960" alt="Clean target and received input for the same LFM sample: waveforms with matched axes above spectrograms with a shared colour scale, and measured SNR, artifact-to-clean power, echo offset and interference-bank row below.">
+      <source media="(prefers-color-scheme: dark)" srcset="docs/figures/observatory/observatory_compare_dark.png">
+      <img src="docs/figures/observatory/observatory_compare_light.png" width="960" alt="Clean target and received input for the same LFM sample: waveforms with matched axes above spectrograms with a shared colour scale, and measured SNR, artifact-to-clean power, echo offset and interference-bank row below.">
     </picture>
   </a>
 </p>
 
-In the interactive page, component colours and line styles are consistent: **clean target** blue (solid), **echo** green (dashed), **co-channel interference** orange (dash-dot), **AWGN** neutral grey (dotted), and the **received** mixture in ink. The README figures use matching clean and received colours. The page follows your system's light or dark theme and has a toggle; it works on desktop and mobile, supports keyboard controls and reduced motion, and runs as a single self-contained HTML file (about 1 MB). See [data provenance and build instructions](docs/SIGNAL_OBSERVATORY_V2.md).
+In the interactive page, component colours and line styles are consistent: **clean target** blue (solid), **echo** green (dashed), **co-channel interference** orange (dash-dot), **AWGN** neutral grey (dotted), and the **received** mixture in ink. The README figures use matching clean and received colours. The page follows your system's light or dark theme and has a toggle; it works on desktop and mobile, supports keyboard controls and reduced motion, and runs as a single self-contained HTML file (about 1 MB). See [data provenance and build instructions](docs/SIGNAL_OBSERVATORY.md).
 
 The interactive page uses compact 16-bit sample encoding with a documented quantisation bound. Charts and CSV exports are approximate representations; use the generator output for full-precision research data.
 
@@ -159,18 +159,18 @@ noisy = clean + AWGN + echo + CCI
 <details>
 <summary><strong>Visual examples: buildup, compositions and SNR sweep</strong></summary>
 
-<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/figures/v2/corruption_buildup_dark.gif"><img src="docs/figures/v2/corruption_buildup_light.gif" width="860" alt="Real generator output revealed as clean signal, echo, interference and noise, with waveform and spectrogram views."></picture></p>
+<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/figures/observatory/corruption_buildup_dark.gif"><img src="docs/figures/observatory/corruption_buildup_light.gif" width="860" alt="Real generator output revealed as clean signal, echo, interference and noise, with waveform and spectrogram views."></picture></p>
 <p align="center"><em>Component buildup is an explanatory sequence; the enabled components coexist in the final observation.</em></p>
 
-<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/figures/v2/compositions_dark.png"><img src="docs/figures/v2/compositions_light.png" width="900" alt="All seven nonempty combinations of AWGN, benchmark echo and interference."></picture></p>
+<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/figures/observatory/compositions_dark.png"><img src="docs/figures/observatory/compositions_light.png" width="900" alt="All seven nonempty combinations of AWGN, benchmark echo and interference."></picture></p>
 
-<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/figures/v2/snr_sweep_dark.gif"><img src="docs/figures/v2/snr_sweep_light.gif" width="860" alt="The same LFM artifact realizations rescaled across target SNR settings from +10 to -14 dB."></picture></p>
+<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/figures/observatory/snr_sweep_dark.gif"><img src="docs/figures/observatory/snr_sweep_light.gif" width="860" alt="The same LFM artifact realizations rescaled across target SNR settings from +10 to -14 dB."></picture></p>
 
 </details>
 
 ## Waveform classes
 
-<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/figures/v2/waveform_gallery_dark.png"><img src="docs/figures/v2/waveform_gallery_light.png" width="900" alt="The twelve waveform classes: short I/Q traces and spectrograms for LFM, Costas, BPSK, Frank, P1–P4 and T1–T4."></picture></p>
+<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/figures/observatory/waveform_gallery_dark.png"><img src="docs/figures/observatory/waveform_gallery_light.png" width="900" alt="The twelve waveform classes: short I/Q traces and spectrograms for LFM, Costas, BPSK, Frank, P1–P4 and T1–T4."></picture></p>
 
 Complex I/Q signals use `fs = 100 MHz`. The table lists **generator input parameters**; cropping and resampling affect the observed segment and its frequencies.
 
@@ -246,18 +246,18 @@ python -m pytest -q
 
 - [Waveform reference tests](tests/test_waveforms_match_matlab.py) compare Python waveforms and resampling against stored MATLAB/Octave reference arrays, using `rtol=1e-9` and amplitude-scaled absolute tolerance.
 - [Generator tests](tests/test_generator.py) check split sizes, class balance, additive reconstruction, power allocations, metadata and seed reproducibility.
-- [Observatory tests](tests/test_observatory_v2.py) decode the samples embedded in the page and check them against the generator, then run the page's own mixing, SNR and playback code in Node.js.
+- [Observatory tests](tests/test_observatory.py) decode the samples embedded in the page and check them against the generator, then run the page's own mixing, SNR and playback code in Node.js.
 - [Published-data comparison](scripts/compare_with_published.py) compares per-class clean-signal power, spectral centroid and bandwidth with a supplied published test file. This is a statistical diagnostic, not proof of sample-for-sample equivalence.
 
 To rebuild the Signal Observatory, the README figures and the preview images:
 
 ```bash
-python scripts/make_observatory_v2.py        # docs/observatory_v2.html (NumPy only)
-python scripts/make_figures_v2.py            # docs/figures/v2/*.png and *.gif (matplotlib, ffmpeg)
-python scripts/capture_observatory_v2.py     # hero and social-card images (Playwright)
+python scripts/make_signal_observatory.py        # docs/signal_observatory.html (NumPy only)
+python scripts/make_figures.py            # docs/figures/observatory/*.png and *.gif (matplotlib, ffmpeg)
+python scripts/capture_observatory.py     # hero and social-card images (Playwright)
 ```
 
-The page palette and component line styles are defined in one file, [`scripts/brsr_palette.py`](scripts/brsr_palette.py). See [the observatory guide](docs/SIGNAL_OBSERVATORY_V2.md) for its numerical and display conventions. The sample library is generated by `make_signal_observatory.py` and reused by the page builder.
+The page palette and component line styles are defined in one file, [`scripts/brsr_palette.py`](scripts/brsr_palette.py). See [the observatory guide](docs/SIGNAL_OBSERVATORY.md) for its numerical and display conventions. The sample library is generated by `observatory_samples.py` and reused by the page builder.
 
 <details>
 <summary><strong>Repository map</strong></summary>
@@ -269,16 +269,16 @@ BRSR-DataGen/
 ├── tests/                        # generator tests and MATLAB reference arrays
 ├── scripts/
 │   ├── brsr_palette.py           # one design system: colours, ramps, fonts, line styles
-│   ├── make_observatory_v2.py    # Signal Observatory builder (+ observatory_v2_template.html)
-│   ├── make_figures_v2.py        # README figures, light and dark
-│   ├── capture_observatory_v2.py # hero and social-card images
-│   └── make_signal_observatory.py # seeded sample library
+│   ├── make_signal_observatory.py # Signal Observatory page builder
+│   ├── make_figures.py            # README figures, light and dark
+│   ├── capture_observatory.py     # preview images
+│   └── observatory_samples.py     # seeded sample library
 ├── legacy/                       # original BRSR v1.0 generation scripts
 └── docs/
-    ├── observatory_v2.html       # interactive Signal Observatory (front door)
-    ├── SIGNAL_OBSERVATORY_V2.md  # provenance, conventions and build instructions
+    ├── signal_observatory.html   # interactive Signal Observatory
+    ├── SIGNAL_OBSERVATORY.md     # provenance and build instructions
     ├── fonts/                    # Inter and JetBrains Mono (SIL OFL), inlined into the page
-    └── figures/                  # waveform and corruption figures; v2/ holds both themes
+    └── figures/                  # waveform and corruption figures in both themes
 ```
 
 </details>

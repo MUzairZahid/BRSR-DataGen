@@ -1,9 +1,9 @@
-"""Capture the Signal Observatory v2 preview images with Playwright (Chromium).
+"""Capture the Signal Observatory preview images with Playwright (Chromium).
 
     pip install playwright && playwright install chromium
-    python scripts/capture_observatory_v2.py
+    python scripts/capture_observatory.py
 
-Outputs (docs/figures/v2/):
+Outputs (docs/figures/observatory/):
     observatory_hero_{light,dark}.png     README hero, 1600 x 1000, no browser chrome or scrollbar
     observatory_compare_{light,dark}.png  the side-by-side comparison section, 1600 x 760
     og_observatory.png                  1200 x 630 social card referenced by the page's og:image
@@ -16,8 +16,8 @@ from pathlib import Path
 from playwright.async_api import async_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
-PAGE = (ROOT / 'docs' / 'observatory_v2.html').resolve().as_uri()
-OUT = ROOT / 'docs' / 'figures' / 'v2'
+PAGE = (ROOT / 'docs' / 'signal_observatory.html').resolve().as_uri()
+OUT = ROOT / 'docs' / 'figures' / 'observatory'
 
 PREPARE = """() => {
   const b = document.getElementById('play'); if (/Pause/.test(b.textContent)) b.click();

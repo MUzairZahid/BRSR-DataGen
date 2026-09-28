@@ -23,7 +23,7 @@ Generate synthetic complex I/Q signals for the **Blind Radar Signal Restoration 
   <a href="https://muzairzahid.github.io/BRSR-DataGen/signal_observatory.html">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="docs/figures/observatory/observatory_scene_dark.gif">
-      <img src="docs/figures/observatory/observatory_scene_light.gif" width="800" alt="Animated radar environment for one real LFM generator sample: the clean pulse, benchmark echo, co-channel interference and AWGN are revealed in four stages. The paths are illustrative.">
+      <img src="docs/figures/observatory/observatory_scene_light.gif" width="900" alt="Animated radar environment for one real LFM generator sample: the clean pulse, benchmark echo, co-channel interference and AWGN are revealed in four stages. The paths are illustrative.">
     </picture>
   </a>
 </p>
@@ -35,7 +35,7 @@ Explore **all 12 waveform classes**, with **three seeded observations per class*
   <a href="https://muzairzahid.github.io/BRSR-DataGen/signal_observatory.html">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="docs/figures/observatory/observatory_compare_dark.gif">
-      <img src="docs/figures/observatory/observatory_compare_light.gif" width="800" alt="Animated clean and received waveforms and spectrograms for the same LFM sample as the radar scene. The received input gains echo, interference and noise while the clean target remains the reference; the final measured SNR is −2.94 dB.">
+      <img src="docs/figures/observatory/observatory_compare_light.gif" width="900" alt="Animated clean and received waveforms and spectrograms for the same LFM sample as the radar scene. The received input gains echo, interference and noise while the clean target remains the reference; the final measured SNR is −2.94 dB.">
     </picture>
   </a>
 </p>

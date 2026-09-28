@@ -10,9 +10,10 @@
 This is the generator of the **BRSR benchmark** (Blind Radar Signal Restoration), used in **BRSR-OpGAN**, **CoRe-Net** and **XCoRe-Net**. It comes in two equivalent implementations: **MATLAB** (no toolboxes needed) and **Python** (NumPy). Both write HDF5 files in the same layout as the published benchmark, so the output works directly with the [BRSR-OpGAN code](https://github.com/MUzairZahid/BRSR-OpGAN).
 
 <p align="center">
-  <img src="docs/figures/radar_environment.gif" width="900" alt="Radar environment: a radar emitter sends a clean LFM waveform to a receiver; an echo arrives via a reflector, an interfering emitter adds co-channel interference, and the receiver adds noise">
+  <a href="https://muzairzahid.github.io/BRSR-DataGen/radar_environment.html"><img src="docs/figures/radar_environment.gif" width="900" alt="Radar environment animation: an emitter sends a clean LFM radar pulse to a receiver; a building reflects a delayed echo, a second emitter adds co-channel interference and the receiver adds noise, while the received waveform and its spectrogram build up"></a>
 </p>
-<p align="center"><em>The radar environment behind the BRSR signal model. A clean waveform reaches the receiver on the direct path. A reflector adds a delayed echo, another emitter adds co-channel interference, and the receiver adds noise. The received signal and its spectrogram below are real generator output.</em></p>
+<p align="center"><em>How one BRSR sample is made. The clean pulse on the direct path is the training target. A building adds a delayed echo, a second emitter adds co-channel interference and the receiver adds AWGN. The waveform and spectrogram are real generator output (SNR −3 dB).</em><br>
+<strong><a href="https://muzairzahid.github.io/BRSR-DataGen/radar_environment.html">Open the interactive version</a></strong>: switch between LFM, Costas and BPSK, pause, or jump to any stage.</p>
 
 > **Looking for the BRSR benchmark itself?** Download it from Zenodo: [DOI 10.5281/zenodo.23010395](https://doi.org/10.5281/zenodo.23010395). The published files are the benchmark. This generator produces *new* data with the same process. It does not re-create the published files, because the original generation was not seeded.
 
@@ -167,9 +168,14 @@ BRSR-DataGen/
 │   ├── waveforms/            # type_LFM, type_Costas, type_Barker, type_Frank, type_P1..P4, type_T1..T4
 │   └── examples/             # small dataset, plot of one signal
 ├── tests/                    # pytest suite, MATLAB reference waveforms, Octave shims
-├── scripts/make_figures.py   # README figures and animations
+├── scripts/
+│   ├── make_figures.py            # README figures and animations
+│   ├── make_environment_page.py   # builds the interactive radar-environment page
+│   └── record_environment_gif.py  # records that page as the README GIF
 ├── legacy/                   # original scripts used to make BRSR v1.0 (for reference)
-└── docs/figures/
+└── docs/
+    ├── radar_environment.html     # interactive page, served by GitHub Pages
+    └── figures/
 ```
 
 ## Related

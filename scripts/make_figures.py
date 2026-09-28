@@ -3,9 +3,11 @@
     pip install -e ".[figures]"      # matplotlib; ffmpeg must be on PATH for the GIFs
     python scripts/make_figures.py
 
+The radar-environment animation (docs/figures/radar_environment.gif) is a recording of the interactive
+page docs/radar_environment.html: see make_environment_page.py and record_environment_gif.py.
+
 Outputs (docs/figures/):
     waveform_gallery.png      the 12 waveform classes: short I/Q piece + spectrogram
-    radar_environment.gif     emitter -> echo -> interference -> receiver noise, and the received signal
     corruption_buildup.gif    clean -> + echo -> + interference -> + noise (LFM and Costas)
     compositions.png          the 7 artifact compositions of the BRSR model on one waveform
     snr_sweep.gif             one corrupted waveform from +10 dB down to -14 dB
@@ -163,165 +165,6 @@ def waveform_gallery(rng):
     plt.close(fig)
 
 
-# ---------------------------------------------------------------- 2b. radar environment animation
-C_ECHO, C_CCI, C_NOISE, C_RX = "#1baf7a", "#eb6834", "#8a8983", "#52514e"
-
-
-def _packet(ax, p, q, s, color, length=1.3, amp=0.18, cycles=5, lw=2.0):
-    """Draw a wave packet centred at fraction s along the segment p -> q."""
-    p, q = np.asarray(p, float), np.asarray(q, float)
-    d = q - p
-    L = np.linalg.norm(d)
-    u = d / L
-    nrm = np.array([-u[1], u[0]])
-    c = p + d * s
-    x = np.linspace(-length / 2, length / 2, 120)
-    env = np.cos(np.pi * x / length) ** 2
-    y = amp * env * np.sin(2 * np.pi * cycles * x / length)
-    pts = c[None] + x[:, None] * u[None] + y[:, None] * nrm[None]
-    keep = ((pts - p) @ u >= 0) & ((pts - p) @ u <= L)
-    ax.plot(pts[keep, 0], pts[keep, 1], color=color, lw=lw, solid_capstyle="round", zorder=5)
-
-
-def _path(ax, pts, color, alpha=0.55):
-    pts = np.asarray(pts, float)
-    ax.plot(pts[:, 0], pts[:, 1], color=color, lw=1.2, ls=(0, (4, 3)), alpha=alpha, zorder=2)
-    a, b = pts[-2], pts[-1]
-    m = a + 0.93 * (b - a)
-    ax.annotate("", xy=b - 0.25 * (b - a) / np.linalg.norm(b - a), xytext=m - 0.3 * (b - a) / np.linalg.norm(b - a),
-                arrowprops=dict(arrowstyle="-|>", color=color, lw=1.2, alpha=alpha), zorder=2)
-
-
-def _wavefronts(ax, x, y, phase, color, facing=1, n=3, rmax=1.6):
-    """Expanding arcs in front of an antenna (phase in [0, 1) animates them)."""
-    from matplotlib.patches import Arc
-    for i in range(n):
-        r = rmax * ((phase + i / n) % 1.0)
-        a = max(0.0, 1 - r / rmax)
-        theta = 0 if facing > 0 else 180
-        ax.add_patch(Arc((x, y + 0.05), 2 * r, 2 * r, angle=theta, theta1=-35, theta2=35, color=color, lw=1.6,
-                         alpha=0.8 * a, zorder=3))
-
-
-def _tower(ax, x, y, facing, label, sub):
-    from matplotlib.patches import Arc, Polygon
-    ax.add_patch(Polygon([[x - 0.35, y - 1.0], [x + 0.35, y - 1.0], [x, y - 0.05]], closed=True, fc=GRID, ec=INK2, lw=1.2))
-    ax.plot([x, x], [y - 1.0, y], color=INK2, lw=1.5)
-    theta = 0 if facing > 0 else 180
-    ax.add_patch(Arc((x - 0.12 * facing, y + 0.05), 0.7, 0.9, angle=theta, theta1=-80, theta2=80, color=INK, lw=2.2))
-    ax.plot([x - 0.12 * facing, x + 0.22 * facing], [y + 0.05, y + 0.05], color=INK, lw=1.2)
-    ax.text(x, y - 1.25, label, ha="center", va="top", fontsize=10, color=INK, fontweight="bold")
-    ax.text(x, y - 1.6, sub, ha="center", va="top", fontsize=8.5, color=INK2)
-
-
-def radar_environment(rng, bank, name="LFM", snr=-3.0):
-    from matplotlib.patches import Polygon
-    long_wav = make_waveform(name, PARAMS[name], NLONG, rng, CFG)
-    clean, noisy, comps, info = add_artifacts(long_wav, snr, bank, rng, composition=("AWGN", "Echo", "CCI"))
-    rms = np.sqrt(np.mean(np.abs(clean) ** 2))
-    clean, comps = clean / rms, comps / rms
-    tx, rx, refl, intf = (1.2, 3.2), (9.0, 3.2), (5.0, 5.35), (6.3, 1.3)
-    noise_pts = np.random.default_rng(7).normal(0, 1, (160, 2)) * [0.42, 0.42] + [rx[0] - 0.05, rx[1] + 0.15]
-    vmax = spec_db(clean).max()
-    ylim = 1.08 * np.abs((clean + comps.sum(0)).real[WIN]).max()
-    tt = np.arange(WIN.stop - WIN.start) / FS * 1e6
-
-    # (stage, caption, active packet list [(path points, s, color)], received components, noise alpha)
-    frames = []
-    intro = "A clean radar waveform travels to the receiver, and the environment adds to it"
-    frames += [(0, intro, [], None, 0.0)] * 10
-    for k in range(24):
-        frames.append((1, "1 · Direct path: the transmitted waveform", [((tx, rx), k / 23, C_CLEAN)], None, 0.0))
-    frames += [(1, "1 · Direct path: the transmitted waveform", [], (1, 0, 0, 0), 0.0)] * 12
-    for k in range(30):
-        seg = ((tx, refl), k / 14, C_ECHO) if k < 15 else ((refl, rx), (k - 15) / 14, C_ECHO)
-        frames.append((2, f"2 · Echo: a delayed copy via a reflector (τ = {info['echo_delay']} samples)", [seg],
-                       (1, 0, 0, 0), 0.0))
-    frames += [(2, f"2 · Echo: a delayed copy via a reflector (τ = {info['echo_delay']} samples)", [], (1, 1, 0, 0), 0.0)] * 12
-    for k in range(22):
-        frames.append((3, "3 · Co-channel interference from another emitter", [((intf, rx), k / 21, C_CCI)],
-                       (1, 1, 0, 0), 0.0))
-    frames += [(3, "3 · Co-channel interference from another emitter", [], (1, 1, 1, 0), 0.0)] * 12
-    for k in range(15):
-        frames.append((4, "4 · Receiver noise (AWGN)", [], (1, 1, 1, (k + 1) / 15), (k + 1) / 15))
-    frames += [(4, "4 · Receiver noise (AWGN)", [], (1, 1, 1, 1), 1.0)] * 8
-    frames += [(5, f"Received signal · SNR {fmt_db(snr)} dB · {name} with echo, interference and noise", [],
-                (1, 1, 1, 1), 1.0)] * 30
-
-    tmp = tempfile.mkdtemp()
-    fig = plt.figure(figsize=(9.6, 6.4), dpi=100)
-    for n, (stage, caption, packets, mix, noise_a) in enumerate(frames):
-        fig.clf()
-        gs = fig.add_gridspec(2, 2, height_ratios=[1.35, 1], width_ratios=[1.2, 1], hspace=0.38, wspace=0.22,
-                              left=0.07, right=0.98, top=0.88, bottom=0.09)
-        sc = fig.add_subplot(gs[0, :])
-        sc.set_xlim(0, 10.2); sc.set_ylim(0.0, 6.0); sc.axis("off")
-        fig.text(0.07, 0.975, f"BRSR-DataGen · the radar environment behind the BRSR signal model", fontsize=12.5,
-                 fontweight="bold", color=INK, va="top")
-        fig.text(0.07, 0.935, caption, fontsize=10.5, color=INK2 if stage == 0 else INK, va="top")
-        # scene
-        sc.add_patch(Polygon([[3.7, 4.95], [4.4, 5.75], [5.0, 5.45], [5.6, 5.9], [6.3, 4.95]], closed=True, fc=GRID,
-                             ec=MUTED, lw=1.0))
-        sc.text(6.45, 5.35, "reflector\n(building / terrain)", fontsize=8.5, color=INK2, va="center")
-        _tower(sc, *tx, 1, "Radar emitter", f"transmits a clean {name} waveform")
-        _tower(sc, *rx, -1, "Receiver", "records 1024 I/Q samples")
-        _tower(sc, *intf, -1, "Interferer", "another emitter, same band")
-        sc.plot([0.2, 10.0], [2.2, 2.2], color=GRID, lw=1.0, zorder=0)            # ground
-        if stage == 1 and packets:
-            _wavefronts(sc, *tx, n / 8.0 % 1.0, C_CLEAN, 1)
-        if stage == 3 and packets:
-            _wavefronts(sc, *intf, n / 8.0 % 1.0, C_CCI, 1, rmax=1.2)
-        if stage >= 1:
-            _path(sc, [tx, rx], C_CLEAN, 0.5 if stage > 1 else 0.8)
-            sc.text(3.3, 3.32, "direct path", fontsize=8.5, color=INK2)
-        if stage >= 2:
-            sc.text(2.55, 4.45, "echo path", fontsize=8.5, color=INK2, rotation=19)
-        if stage >= 3:
-            sc.text(7.4, 1.95, "interference", fontsize=8.5, color=INK2, rotation=40)
-        if stage >= 2:
-            _path(sc, [tx, refl, rx], C_ECHO, 0.5 if stage > 2 else 0.8)
-        if stage >= 3:
-            _path(sc, [intf, rx], C_CCI, 0.5 if stage > 3 else 0.8)
-        if noise_a > 0:
-            sc.scatter(noise_pts[:, 0], noise_pts[:, 1], s=5, color=C_NOISE, alpha=0.6 * noise_a, lw=0, zorder=4)
-            sc.text(rx[0] + 0.55, rx[1] + 0.75, "noise", fontsize=8.5, color=INK2, alpha=noise_a)
-        for pts, s_, col in packets:
-            _packet(sc, pts[0], pts[1], min(max(s_, 0), 1), col)
-        if stage == 5:
-            sc.text(10.1, 0.45, "→ saved as a training pair:\nclean, received, components",
-                    ha="right", va="center", fontsize=9, color=INK,
-                    bbox=dict(boxstyle="round,pad=0.4", fc=SURFACE, ec=MUTED, lw=1))
-        # received time signal
-        at, asp = fig.add_subplot(gs[1, 0]), fig.add_subplot(gs[1, 1])
-        at.set_title("Received signal (I channel)", loc="left", fontsize=10)
-        at.set_xlim(0, tt[-1]); at.set_ylim(-ylim, ylim)
-        at.grid(axis="y", color=GRID, lw=0.8); at.tick_params(length=0)
-        for s in ("top", "right"):
-            at.spines[s].set_visible(False)
-        at.set_xlabel("time (µs)", fontsize=9); at.set_ylabel("amplitude", fontsize=9)
-        asp.set_title("Spectrogram", loc="left", fontsize=10)
-        if mix is None:
-            at.text(0.5, 0.5, "waiting for the signal …", transform=at.transAxes, ha="center", va="center",
-                    color=MUTED, fontsize=10)
-            asp.axis("off")
-        else:
-            z = clean * mix[0] + comps[1] * mix[1] + comps[2] * mix[2] + comps[0] * mix[3]
-            if stage >= 2:
-                at.plot(tt, clean.real[WIN], color=C_CLEAN, lw=1.2, ls=(0, (3, 2)))
-            at.plot(tt, z.real[WIN], color=C_CLEAN if stage == 1 else C_RX, lw=1.5)
-            keys = [("received", C_CLEAN if stage == 1 else C_RX, "-")] + ([("clean", C_CLEAN, (0, (3, 2)))] if stage >= 2 else [])
-            for k, (lab, c, ls) in enumerate(keys):
-                at.plot([0.62, 0.7], [1.08 - 0.13 * k] * 2, color=c, lw=1.5, ls=ls, transform=at.transAxes, clip_on=False)
-                at.text(0.72, 1.08 - 0.13 * k, lab, fontsize=8.5, color=INK2, va="center", transform=at.transAxes)
-            show_spec(asp, z, vmax=vmax)
-            asp.set_xlabel("time (µs)", fontsize=9); asp.set_ylabel("MHz", fontsize=9)
-            asp.set_yticks([-40, 0, 40])
-        fig.savefig(os.path.join(tmp, f"f{n:04d}.png"))
-    plt.close(fig)
-    to_gif(tmp, os.path.join(OUT, "radar_environment.gif"), fps=15, width=900)
-    shutil.rmtree(tmp)
-
-
 # ---------------------------------------------------------------- 2. corruption build-up animation
 def corruption_buildup(rng, bank):
     steps = ["Clean", "+ Echo", "+ Interference", "+ Noise", "Received"]
@@ -437,7 +280,6 @@ def main():
     os.makedirs(OUT, exist_ok=True)
     bank = load_interference_bank()
     waveform_gallery(np.random.default_rng(1))
-    radar_environment(np.random.default_rng(5), bank)
     corruption_buildup(np.random.default_rng(2), bank)
     compositions(np.random.default_rng(3), bank)
     snr_sweep(np.random.default_rng(4), bank)

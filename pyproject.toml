@@ -21,6 +21,7 @@ test = ["pytest", "scipy"]
 Homepage = "https://github.com/MUzairZahid/BRSR-DataGen"
 Dataset = "https://doi.org/10.5281/zenodo.23010395"
 "BRSR-OpGAN" = "https://github.com/MUzairZahid/BRSR-OpGAN"
+"Interactive demo" = "https://muzairzahid.github.io/BRSR-DataGen/radar_environment.html"
 
 [project.scripts]
 brsr-datagen = "brsr_datagen.__main__:main"

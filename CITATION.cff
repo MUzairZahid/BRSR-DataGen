@@ -1,0 +1,57 @@
+cff-version: 1.2.0
+title: "BRSR-DataGen: Radar Signal Dataset Generator for Blind Radar Signal Restoration"
+message: "If you use this generator or data made with it, please cite the BRSR-OpGAN paper and the BRSR dataset."
+type: software
+authors:
+  - family-names: Zahid
+    given-names: Muhammad Uzair
+  - family-names: Kiranyaz
+    given-names: Serkan
+  - family-names: Yildirim
+    given-names: Alper
+  - family-names: Gabbouj
+    given-names: Moncef
+repository-code: "https://github.com/MUzairZahid/BRSR-DataGen"
+license: MIT
+version: "1.0.0"
+keywords:
+  - radar signal generator
+  - LPI radar waveforms
+  - radar dataset
+  - signal restoration
+  - BRSR dataset
+  - BRSR-OpGAN
+preferred-citation:
+  type: article
+  title: "BRSR-OpGAN: Blind radar signal restoration using operational generative adversarial network"
+  authors:
+    - family-names: Zahid
+      given-names: Muhammad Uzair
+    - family-names: Kiranyaz
+      given-names: Serkan
+    - family-names: Yildirim
+      given-names: Alper
+    - family-names: Gabbouj
+      given-names: Moncef
+  journal: "Neural Networks"
+  volume: 190
+  start: 107709
+  year: 2025
+  doi: "10.1016/j.neunet.2025.107709"
+references:
+  - type: data
+    title: "BRSR Dataset: Blind Radar Signal Restoration Benchmark (v1.0)"
+    authors:
+      - family-names: Zahid
+        given-names: Muhammad Uzair
+      - family-names: Kiranyaz
+        given-names: Serkan
+      - family-names: Yildirim
+        given-names: Alper
+      - family-names: Gabbouj
+        given-names: Moncef
+    publisher:
+      name: Zenodo
+    version: "1.0"
+    year: 2026
+    doi: "10.5281/zenodo.23010395"

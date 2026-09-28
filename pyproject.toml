@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "brsr-datagen"
+version = "1.0.0"
+description = "Radar signal dataset generator for blind radar signal restoration (BRSR benchmark): 12 LPI waveforms with AWGN, echo and co-channel interference."
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.8"
+authors = [{name = "Muhammad Uzair Zahid"}]
+keywords = ["radar", "LPI radar waveforms", "signal restoration", "denoising", "dataset generator", "BRSR", "BRSR-OpGAN"]
+dependencies = ["numpy>=1.21", "h5py>=3.1"]
+
+[project.optional-dependencies]
+figures = ["matplotlib>=3.5"]
+test = ["pytest", "scipy"]
+
+[project.urls]
+Homepage = "https://github.com/MUzairZahid/BRSR-DataGen"
+Dataset = "https://doi.org/10.5281/zenodo.23010395"
+"BRSR-OpGAN" = "https://github.com/MUzairZahid/BRSR-OpGAN"
+
+[project.scripts]
+brsr-datagen = "brsr_datagen.__main__:main"
+
+[tool.setuptools.package-dir]
+"" = "python"
+
+[tool.setuptools.packages.find]
+where = ["python"]
+
+[tool.setuptools.package-data]
+brsr_datagen = ["data/*.npy"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["python"]

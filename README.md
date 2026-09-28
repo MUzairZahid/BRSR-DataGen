@@ -128,7 +128,7 @@ wave = make_waveform('Frank', params, 2048, rng, cfg)
 clean, noisy, components, info = add_artifacts(
     wave, snr_db=-5, bank=load_interference_bank(), rng=rng
 )
-print(info)  # composition, power fractions, source offset and interference-bank row
+print(info)  # composition, power fractions, echo delay and interference-bank row
 ```
 
 </details>
@@ -149,10 +149,10 @@ noisy = clean + AWGN + echo + CCI
 | Component | What the implementation uses |
 |---|---|
 | AWGN | Complex Gaussian samples, scaled to their allocated power |
-| Benchmark echo | A segment of the same longer source waveform, with a positive source offset of 128–512 samples |
+| Benchmark echo | A delayed copy of the same longer source waveform, delay τ ∈ [128, 512] samples |
 | Co-channel interference | One row of a fixed bank containing 50 complex signals, 35 distinct |
 
-**Echo convention.** The clean slice starts at `start`; the echo source starts at `start + offset`. This preserves the original code's convention. It is not a causal `x(t − τ)` propagation model. There is no simulated scene geometry, path loss, Doppler or antenna pattern.
+**Echo convention.** The clean segment is `long_signal[start : start + n]` and the echo component is `long_signal[start + τ : start + τ + n]`, a copy of the same source waveform delayed by τ, exactly as the original code built it. There is no simulated scene geometry, path loss, Doppler or antenna pattern.
 
 **Target versus measured SNR.** Component power budgets add to `P`, but the power of their sum includes cross-terms. Consequently, a mixed sample's measured SNR can differ from its target. Both are recorded in the CSV; the HDF5 `snr_db` field stores the target.
 
@@ -206,7 +206,7 @@ AWGN mode uses the `awgn_baseline_` prefix instead. Defaults produce 49,920 trai
 
 File attributes include class names, split, signal layout, generator version and configuration. MATLAB's `h5read` returns dimensions in reverse order.
 
-The CSV identifies each signal by `split` and zero-based `row`. It records `class_name`, `snr_target_db`, `snr_measured_db`, waveform parameters (`params`), and, in BRSR mode, `composition`, `w_awgn`, `w_echo`, `w_cci`, `echo_delay`, `cci_bank_row` and `segment_start`. The legacy field name `echo_delay` denotes the source offset described above.
+The CSV identifies each signal by `split` and zero-based `row`. It records `class_name`, `snr_target_db`, `snr_measured_db`, waveform parameters (`params`), and, in BRSR mode, `composition`, `w_awgn`, `w_echo`, `w_cci`, `echo_delay`, `cci_bank_row` and `segment_start`.
 
 ## Configuration
 
@@ -219,7 +219,7 @@ The CSV identifies each signal by `split` and zero-based `row`. It records `clas
 | `snr_levels` | −14:2:10 | Discrete AWGN levels; loop count also determines BRSR run size |
 | `param_sampling` | `grid` | Shuffled parameter grids; `uniform` draws independent parameters |
 | `legacy_lfm` | true | Preserve original LFM amplitude convention |
-| `echo_delay` | [128, 512] | Benchmark echo source-offset range, in samples |
+| `echo_delay` | [128, 512] | Echo delay τ range, in samples |
 
 Python `Config.compositions` can restrict the permitted artifact combinations; the MATLAB config does not expose that option. Use `python -m brsr_datagen --help` for CLI options; not every configuration field has a CLI flag.
 
@@ -230,8 +230,8 @@ The defaults preserve choices in the original code rather than silently changing
 - **Resampling:** variable-length waveforms are linearly resampled to the target length, which changes their effective frequencies at fixed `fs`.
 - **LFM amplitude:** the original expression adds random φ₀ outside the imaginary unit, `A·exp(j2πft + φ₀)`, scaling amplitude by `exp(φ₀)`. Use `--fixed_lfm` / `legacy_lfm=false` for the corrected phase convention; this changes the published-data convention.
 - **Parameter grids:** grids are reshuffled for each SNR-loop iteration. In AWGN mode this repeats clean waveforms across levels. Use `param_sampling='uniform'` for independent parameter draws.
-- **Echo, Costas and interference bank:** the source-offset direction, unvalidated permutation sampling and 50-row bank follow the implementation, as detailed above.
-- **Paper/code differences:** the paper describes a causal delayed echo and a 100-signal interference set. Its Eq. 22 places the blend weight outside the square root; the implementation allocates power using `sqrt(w_i * P / P_i)`. This repository retains the code conventions and makes them explicit.
+- **Echo, Costas and interference bank:** the echo construction, unvalidated permutation sampling and 50-row bank follow the implementation, as detailed above.
+- **Paper/code differences:** the paper describes a 100-signal interference set. Its Eq. 22 places the blend weight outside the square root; the implementation allocates power using `sqrt(w_i * P / P_i)`. This repository retains the code conventions and makes them explicit.
 
 For a reproducible experiment, retain the generator revision, configuration, seed and output metadata. Use the released benchmark for claims about published test-set performance.
 
@@ -254,7 +254,8 @@ To rebuild the Signal Observatory, the README figures and the preview images:
 ```bash
 python scripts/make_signal_observatory.py        # docs/signal_observatory.html (NumPy only)
 python scripts/make_figures.py            # docs/figures/observatory/*.png and *.gif (matplotlib, ffmpeg)
-python scripts/capture_observatory.py     # hero and social-card images (Playwright)
+python scripts/capture_observatory.py     # still images and social card (Playwright)
+python scripts/record_observatory_gifs.py # README animations (Playwright + ffmpeg)
 ```
 
 The page palette and component line styles are defined in one file, [`scripts/brsr_palette.py`](scripts/brsr_palette.py). See [the observatory guide](docs/SIGNAL_OBSERVATORY.md) for its numerical and display conventions. The sample library is generated by `observatory_samples.py` and reused by the page builder.

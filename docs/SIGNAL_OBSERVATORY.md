@@ -57,8 +57,8 @@ It uses the repository's waveform and artifact implementations. Edit
 - LFM retains the benchmark's legacy amplitude convention, normalised for display.
   Costas uses validated hops `[1, 2, 4, 3]`; Barker BPSK uses the generator's
   linear resampling.
-- The echo is `source[start + offset + n]`, the benchmark's positive source-offset
-  convention. The building, towers, paths and particles are illustrative. No
+- The echo is `source[start + τ + n]`, a copy of the source waveform delayed by τ,
+  as the benchmark built it. The building, towers, paths and particles are illustrative. No
   physical ranges, propagation delays, antenna patterns or Doppler are simulated.
 - Each stored observation starts at −3 dB with all three artifacts. The slider
   applies `10 ** ((−3 − target_snr) / 20)` to the fixed artifact realizations.

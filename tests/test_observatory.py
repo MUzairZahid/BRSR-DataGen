@@ -216,6 +216,7 @@ def test_public_entry_points_and_navigation():
     links = Links()
     links.feed(html)
     assert links.hrefs.count('https://github.com/MUzairZahid/BRSR-DataGen') == 1
+    assert links.hrefs.count('https://muzairzahid.github.io/BRSR-OpGAN/brsr_restoration.html') >= 2, 'chapter 02 link'
     assert 'radar_environment.html' not in links.hrefs
     assert 'signal_observatory.html' not in links.hrefs
     assert 'url=signal_observatory.html' in (ROOT / 'docs/index.html').read_text(encoding='utf-8')

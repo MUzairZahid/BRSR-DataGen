@@ -148,11 +148,14 @@ button:disabled{opacity:.45;cursor:default}
 .topnav{display:flex;align-items:center;gap:4px}
 .topnav a{color:var(--muted);text-decoration:none;font-size:14px;padding:8px 10px;border-radius:var(--radius-sm);min-height:36px;display:inline-flex;align-items:center}
 .topnav a:hover{color:var(--ink);background:var(--surface2)}
+.topnav a[aria-current=page]{color:var(--ink);background:var(--surface2);font-weight:500}
+.topnav .num{font:600 11px var(--font-mono);color:var(--muted);margin-right:6px}
 .iconbtn{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border:1px solid var(--line2);border-radius:var(--radius-sm);background:var(--surface)}
 .iconbtn svg{width:18px;height:18px}
 .hero{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 32px;padding:28px 0 20px}
 .hero h1{font-size:clamp(26px,3.2vw,38px);line-height:1.12;max-width:26ch}
 .hero .lede{color:var(--ink2);max-width:60ch;margin-top:8px}
+.hero .prov{color:var(--muted);font-size:13px;max-width:62ch;margin-top:8px}
 .eyebrow{display:flex;align-items:center;gap:8px;margin-bottom:10px}
 .eyebrow i{width:6px;height:6px;border-radius:50%;background:var(--clean)}
 .badge{border:1px solid var(--line2);border-radius:var(--radius);padding:10px 14px;background:var(--surface);font-size:13px;color:var(--ink2);line-height:1.5}
@@ -313,6 +316,9 @@ th:first-child,td:first-child{text-align:left}
 .method b{color:var(--ink)}
 .method code{font:12.5px var(--font-mono);color:var(--ink)}
 .provenance{font:12.5px/1.7 var(--font-mono);padding:10px 12px;background:var(--surface2);border-radius:var(--radius-sm);margin-top:8px}
+
+.nextcard{margin-top:22px;padding:18px 20px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
+.nextcard p{color:var(--ink2);font-size:14px;max-width:70ch}
 footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 20px;padding:26px 0 40px;color:var(--muted);font-size:13px}
 footer a{color:var(--muted);display:inline-block;padding:4px 0}
 .bootnotice{padding:12px 16px;border:1px solid var(--cci);border-radius:var(--radius-sm);color:var(--ink);font-size:14px;margin:12px 0}
@@ -350,6 +356,9 @@ footer a{color:var(--muted);display:inline-block;padding:4px 0}
 @media (max-width:640px){
   .top{min-height:56px}
   .topnav a.hide-sm{display:none}
+  .topnav a{padding:8px 7px;font-size:13px}
+  .topnav .num{display:none}
+  .topnav{gap:2px}
   .brand span{display:none}
   .allocgrid{grid-template-columns:1fr 1.3fr 1fr;gap:4px}
   .swatch{display:none}
@@ -396,9 +405,10 @@ footer a{color:var(--muted);display:inline-block;padding:4px 0}
 <div class="wrap">
 <header class="top">
   <a class="brand" href="#main"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="13" fill="none" stroke="currentColor" stroke-opacity=".35"/><path d="M4 18h5l3-8 5 15 4-10 3 3h4" fill="none" stroke="var(--clean)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>BRSR-DataGen <span>/ Signal Observatory</span></a>
-  <nav class="topnav" aria-label="Site">
-    <a href="https://github.com/MUzairZahid/BRSR-DataGen">GitHub ↗</a>
-    <a class="hide-sm" href="https://doi.org/10.5281/zenodo.23010395">Dataset</a>
+  <nav class="topnav" aria-label="BRSR chapters">
+    <a href="#main" aria-current="page"><span class="num">01</span>Generate</a>
+    <a href="https://muzairzahid.github.io/BRSR-OpGAN/brsr_restoration.html"><span class="num">02</span>Restore ↗</a>
+    <a class="hide-sm" href="https://github.com/MUzairZahid/BRSR-DataGen">GitHub ↗</a>
     <button class="iconbtn" id="themeToggle" type="button" aria-label="Switch to dark theme" title="Switch theme"><svg viewBox="0 0 20 20" aria-hidden="true"><path id="themeIcon" d="M10 3v2M10 15v2M3 10h2M15 10h2M5 5l1.4 1.4M13.6 13.6L15 15M5 15l1.4-1.4M13.6 6.4L15 5M10 6.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
   </nav>
 </header>
@@ -408,6 +418,7 @@ footer a{color:var(--muted);display:inline-block;padding:4px 0}
     <div class="eyebrow micro"><i></i>INSIDE THE DATASET · INTERACTIVE STUDY 01</div>
     <h1 id="pageTitle">A clean pulse, and what the receiver actually gets.</h1>
     <p class="lede">One real generator sample, two linked views. Reveal the components in the radar environment, then compare the clean target with the received mixture in time and frequency.</p>
+    <p class="prov">Newly seeded generator samples, not rows of the released splits. The <a href="https://muzairzahid.github.io/BRSR-OpGAN/brsr_restoration.html">restoration chapter</a> shows released test rows restored by BRSR-OpGAN; the two pages do not show the same signal.</p>
   </div>
   <div class="badge"><b>REAL GENERATOR OUTPUT</b>12 waveform classes · 36 seeded observations<br>MATLAB benchmark conventions · Python realisation</div>
 </section>
@@ -520,7 +531,7 @@ footer a{color:var(--muted);display:inline-block;padding:4px 0}
     <button class="chip awgn" type="button" data-inspect="Noise" aria-pressed="false" style="--c:var(--awgn)"><i></i>AWGN</button>
   </div>
   <p class="inspectcopy" id="inspectCopy" aria-live="polite"></p>
-  <div class="scenefoot"><span>Conceptual scene: no simulated ranges or propagation delays. The benchmark echo is an offset segment of the same source waveform.</span><span>Same sample in both views ↓</span></div>
+  <div class="scenefoot"><span>Conceptual scene: no simulated ranges or propagation delays. The echo is the benchmark's delayed copy of the source waveform (delay τ).</span><span>Same sample in both views ↓</span></div>
   <div class="transport">
     <div class="transportrow">
       <button class="btn primary" id="play" type="button"><svg viewBox="0 0 14 14" aria-hidden="true"><path id="playIcon" d="M4 2v10M10 2v10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><span id="playText">Pause</span></button>
@@ -581,7 +592,7 @@ footer a{color:var(--muted);display:inline-block;padding:4px 0}
   <div class="stats" role="group" aria-label="Measurements of the current mixture">
     <div class="stat"><label>MEASURED SNR</label><output id="measuredSnr"></output></div>
     <div class="stat"><label>ARTIFACT / CLEAN POWER</label><output id="powerRatio"></output></div>
-    <div class="stat"><label>ECHO SOURCE OFFSET</label><output id="offsetStat"></output></div>
+    <div class="stat"><label>ECHO DELAY τ</label><output id="offsetStat"></output></div>
     <div class="stat"><label>INTERFERENCE BANK ROW</label><output id="bankStat"></output></div>
   </div>
   <p class="sr-only" id="liveSummary" aria-live="polite"></p>
@@ -613,13 +624,17 @@ footer a{color:var(--muted);display:inline-block;padding:4px 0}
       </div>
       <div>
         <b>A synthetic additive model, not a propagation simulator.</b>
-        <p>The benchmark echo is a source segment that starts <em>later</em> than the clean segment: <code>source[start + offset + n]</code>. The page keeps that legacy convention and calls it a source offset rather than a physical delay. The towers, building and moving particles are visual metaphors; no ranges, Doppler shifts or antenna patterns are simulated.</p>
+        <p>The echo is a delayed copy of the same source waveform: with the clean segment at <code>source[start + n]</code>, the echo component is <code>source[start + τ + n]</code> with delay τ ∈ [128, 512] samples, exactly as the original generator built it. The towers, building and moving particles are visual metaphors; no ranges, Doppler shifts or antenna patterns are simulated.</p>
         <p>Power fractions are applied as square-root amplitude gains. The interference bank has 50 rows (35 distinct signals). The LFM uses the legacy benchmark amplitude convention, normalised here for display. The Costas example uses a validated sequence, 1–2–4–3.</p>
         <p>Spectrograms use a 64-point Hann window with a 4-sample hop over the complex signal (241 frames, centres 0.315–9.915 µs; bin centres −50 to +48.4 MHz) and are drawn at that native resolution without smoothing. Colours are fixed from −40 to 0 dB relative to the clean spectrogram peak of the selected waveform; both panels share the scale.</p>
         <p>Component switches isolate parts of the same blend; they do not draw a new composition or redistribute power. <em>Next sample</em> loads a different stored realisation with the same waveform parameters.</p>
       </div>
     </div>
   </details>
+  <div class="card nextcard">
+    <p><b>What does a restorer make of this?</b> The restoration chapter shows released test rows corrupted the same way and restored by BRSR-OpGAN, with the residual error.</p>
+    <a class="btn" href="https://muzairzahid.github.io/BRSR-OpGAN/brsr_restoration.html">02 · Restore ↗</a>
+  </div>
 </section>
 </div>
 
@@ -651,7 +666,7 @@ footer a{color:var(--muted);display:inline-block;padding:4px 0}
 
 <footer>
   <span>BRSR-DataGen · Signal Observatory</span>
-  <span><a href="https://muzairzahid.github.io/BRSR-OpGAN/brsr_restoration.html">Explore restoration ↗</a></span>
+  <span><a href="https://muzairzahid.github.io/BRSR-OpGAN/brsr_restoration.html">02 · Restore ↗</a> · <a href="https://doi.org/10.5281/zenodo.23010395">Dataset ↗</a></span>
 </footer>
 </div>
 
@@ -793,7 +808,7 @@ function updateDiagram(){
     $$('[data-wire="'+name+'"]').forEach(w=>{w.style.opacity=active?(hi?'1':'.15'):'0';});
     $$('[data-particle="'+name+'"]').forEach(p=>p.style.opacity=active&&hi&&state.playing?'1':'0');});
   $$('button[data-inspect]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.inspect===state.inspect)));
-  const d=record(),texts={All:'Select a source in the scene, or a button, to trace its real contribution in the received waveform.',Clean:'Clean target x[n] is the training reference. Highlighting it overlays the same trace on the received plot.',Echo:'Benchmark echo: an offset segment of the same source waveform (+'+d.offset+' samples), represented by the reflector. No physical path delay is calculated.',Cci:'Co-channel interference: interference-bank row '+d.bankRow+' of '+DATA.bankSize+', added at its allocated power.',Noise:'Receiver noise: a seeded complex Gaussian realisation, scaled to its allocated power.'};
+  const d=record(),texts={All:'Select a source in the scene, or a button, to trace its real contribution in the received waveform.',Clean:'Clean target x[n] is the training reference. Highlighting it overlays the same trace on the received plot.',Echo:'Echo: the benchmark\u2019s delayed copy of the source waveform (delay τ = '+d.offset+' samples, '+(d.offset/100).toFixed(2)+' µs), represented by the reflector.',Cci:'Co-channel interference: interference-bank row '+d.bankRow+' of '+DATA.bankSize+', added at its allocated power.',Noise:'Receiver noise: a seeded complex Gaussian realisation, scaled to its allocated power.'};
   const k=names.indexOf(state.inspect),mutedOff=k>=0&&!state.enabled[k];
   $('inspectCopy').textContent=texts[state.inspect]+(mutedOff?' This component is currently switched off in "Shape the corruption".':'');
   $('selectionNote').textContent=state.inspect==='All'?'Overlay a component to see its own trace on the received waveform. Both spectrograms always show the complete signals.':LABEL[state.inspect]+' is drawn as a '+({Clean:'solid',Echo:'dashed',Cci:'dash-dot',Noise:'dotted'}[state.inspect])+' overlay on the received waveform'+(mutedOff?' (zero while switched off)':'')+'. The spectrograms keep the complete signals.';
@@ -801,7 +816,7 @@ function updateDiagram(){
   const legend=[['received','var(--received)','Received y[n]','']];if(state.inspect!=='All')legend.push([state.inspect.toLowerCase()==='noise'?'awgn':state.inspect.toLowerCase(),'var('+COLOR[state.inspect]+')',LABEL[state.inspect]+' overlay','']);
   $('legend').innerHTML=legend.map(([cls,c,l])=>'<span><i class="'+cls+'" style="--c:'+c+'"></i>'+l+'</span>').join('');
 }
-const captions=[['Start with the target','The clean complex waveform is the reference. Every plot shows the same 10.24 µs observation.'],['Reveal the echo','Add the benchmark’s offset source segment. The stored convention uses a later slice of the same waveform, not a simulated reflection.'],['Add another signal','A fixed interference-bank signal is added at its allocated power. The full complex signals combine sample by sample.'],['Receive the mixture','Complex Gaussian noise completes this blend: a corrupted input paired with its clean training target.']];
+const captions=[['Start with the target','The clean complex waveform is the reference. Every plot shows the same 10.24 µs observation.'],['Reveal the echo','Add the benchmark’s echo: a delayed copy of the source waveform (delay τ) at its allocated power.'],['Add another signal','A fixed interference-bank signal is added at its allocated power. The full complex signals combine sample by sample.'],['Receive the mixture','Complex Gaussian noise completes this blend: a corrupted input paired with its clean training target.']];
 
 /* ---- state -> view ---- */
 function summary(){const m=measured(current),on=names.map((n,k)=>LABEL[n]+' '+(state.enabled[k]?'on':'off')).join(', ');return state.wf+', sample '+(state.sample+1)+' of '+DATA.records[state.wf].length+', seed '+record().seed+'. Target '+fmt(state.snr,0)+' dB, measured '+(Number.isFinite(m.snr)?fmt(m.snr,2)+' dB':'infinite (clean)')+'. '+on+'. Showing samples '+state.range[0]+' to '+(state.range[1]-1)+' of the '+(state.channel?'Q':'I')+' channel.';}
@@ -813,7 +828,7 @@ function update(){
   $('snrValue').textContent=fmt(state.snr,0);$('snr').setAttribute('aria-valuetext',fmt(state.snr,0)+' decibels, full blend');
   $('measuredSnr').innerHTML=Number.isFinite(m.snr)?fmt(m.snr,2)+'<small>dB</small>':'∞<small>clean</small>';
   $('powerRatio').innerHTML=fmt(m.ratio,2)+'<small>×</small>';
-  $('offsetStat').innerHTML='+'+d.offset+'<small>samples · '+(d.offset/100).toFixed(2)+' µs</small>';
+  $('offsetStat').innerHTML=d.offset+'<small>samples · '+(d.offset/100).toFixed(2)+' µs</small>';
   $('bankStat').innerHTML=d.bankRow+'<small>of '+DATA.bankSize+'</small>';
   names.forEach((name,k)=>{const w=d.weights[weightIndex[k]];$('toggle'+name).checked=state.enabled[k];$('weight'+name).textContent=(100*w).toFixed(1)+'%';$('bar'+name).style.width=(100*w)+'%';$('bar'+name).style.opacity=state.enabled[k]?'1':'.25';});
   $$('[data-stage]').forEach(b=>{if(!state.custom&&+b.dataset.stage===state.stage)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current');});
@@ -832,8 +847,8 @@ function setWaveform(name,animate){
   const changed=state.wf!==name;if(changed)state.sample=0;state.wf=name;const d=record();
   $$('[data-wf]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.wf===name)));
   $('waveTitle').textContent=d.title;$('seedTag').textContent='SEED '+d.seed;$('sampleCount').textContent='Sample '+(state.sample+1)+' / '+DATA.records[name].length;
-  $$('[data-offset-label]').forEach(e=>e.textContent='Source offset +'+d.offset+' samples');$$('[data-bank-label]').forEach(e=>e.textContent='Bank row '+d.bankRow);
-  $('waveDescription').textContent=d.subtitle+'.';$('provenance').textContent='Seed '+d.seed+' · clean start '+d.start+' · echo offset +'+d.offset+' samples ('+(d.offset/100).toFixed(2)+' µs) · bank row '+d.bankRow+' / '+DATA.bankSize+' · weights AWGN '+d.weights[0].toFixed(3)+', echo '+d.weights[1].toFixed(3)+', CCI '+d.weights[2].toFixed(3);
+  $$('[data-offset-label]').forEach(e=>e.textContent='Delay τ = '+d.offset+' samples');$$('[data-bank-label]').forEach(e=>e.textContent='Bank row '+d.bankRow);
+  $('waveDescription').textContent=d.subtitle+'.';$('provenance').textContent='Seed '+d.seed+' · clean start '+d.start+' · echo delay τ '+d.offset+' samples ('+(d.offset/100).toFixed(2)+' µs) · bank row '+d.bankRow+' / '+DATA.bankSize+' · weights AWGN '+d.weights[0].toFixed(3)+', echo '+d.weights[1].toFixed(3)+', CCI '+d.weights[2].toFixed(3);
   cleanSpec=spectrum(d.clean);cleanPeak=Math.max(...cleanSpec.flat());state.cursor=null;
   clearTimeout(fadeTimer);const grid=$('chartgrid');grid.classList.remove('fading');
   // Commit the sample and its mixture together; cosmetic fades must not delay data.
@@ -845,7 +860,7 @@ function setWaveform(name,animate){
 function rows(){const d=record(),g=gain(),out=[];for(let n=0;n<1024;n++){const r=[n,(n/100).toFixed(2)];r.push(d.clean[0][n],d.clean[1][n]);for(const k of ['echo','cci','noise']){const on=state.enabled[keys.indexOf(k)];r.push(on?g*d[k][0][n]:0,on?g*d[k][1][n]:0);}r.push(current[0][n],current[1][n]);out.push(r);}return out;}
 function renderTable(){const [n0,n1]=state.range,body=$('sampleTable').tBodies[0],data=rows().slice(n0,n1);body.innerHTML=data.map(r=>'<tr>'+r.map((v,i)=>'<td>'+(i<2?v:fmt(v,4))+'</td>').join('')+'</tr>').join('');$('tableNote').textContent='Showing samples '+n0+'–'+(n1-1)+' of the current mixture (target '+fmt(state.snr,0)+' dB). Components that are switched off are zero.';}
 $('tableDetails').addEventListener('toggle',()=>{if($('tableDetails').open)renderTable();});
-$('downloadCsv').addEventListener('click',()=>{const d=record(),m=measured(current);const head=['# BRSR-DataGen Signal Observatory sample export','# class='+state.wf+' seed='+d.seed+' sample='+(state.sample+1)+' target_snr_db='+state.snr+' measured_snr_db='+(Number.isFinite(m.snr)?m.snr.toFixed(4):'inf')+' artifact_gain='+gain().toFixed(6),'# echo_offset_samples='+d.offset+' cci_bank_row='+d.bankRow+' segment_start='+d.start+' weights_awgn_echo_cci='+d.weights.map(w=>w.toFixed(6)).join('/')+' enabled_echo_cci_awgn='+state.enabled.map(Number).join('/'),'# encoding: '+RAW.encoding+'; max quantisation error/component peak='+RAW.maxQuantError.toExponential(6),'# units: clean-RMS (original clean RMS '+d.originalRms.toExponential(6)+'); fs=100 MHz; received = clean + enabled components','n,t_us,clean_I,clean_Q,echo_I,echo_Q,cci_I,cci_Q,awgn_I,awgn_Q,received_I,received_Q'];const csv=head.concat(rows().map(r=>r.map((v,i)=>i<2?v:(+v).toExponential(7)).join(','))).join('\n');const blob=new Blob([csv],{type:'text/csv'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='brsr_'+state.wf+'_seed'+d.seed+'_snr'+state.snr+'dB.csv';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);});
+$('downloadCsv').addEventListener('click',()=>{const d=record(),m=measured(current);const head=['# BRSR-DataGen Signal Observatory sample export','# class='+state.wf+' seed='+d.seed+' sample='+(state.sample+1)+' target_snr_db='+state.snr+' measured_snr_db='+(Number.isFinite(m.snr)?m.snr.toFixed(4):'inf')+' artifact_gain='+gain().toFixed(6),'# echo_delay_samples='+d.offset+' cci_bank_row='+d.bankRow+' segment_start='+d.start+' weights_awgn_echo_cci='+d.weights.map(w=>w.toFixed(6)).join('/')+' enabled_echo_cci_awgn='+state.enabled.map(Number).join('/'),'# encoding: '+RAW.encoding+'; max quantisation error/component peak='+RAW.maxQuantError.toExponential(6),'# units: clean-RMS (original clean RMS '+d.originalRms.toExponential(6)+'); fs=100 MHz; received = clean + enabled components','n,t_us,clean_I,clean_Q,echo_I,echo_Q,cci_I,cci_Q,awgn_I,awgn_Q,received_I,received_Q'];const csv=head.concat(rows().map(r=>r.map((v,i)=>i<2?v:(+v).toExponential(7)).join(','))).join('\n');const blob=new Blob([csv],{type:'text/csv'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='brsr_'+state.wf+'_seed'+d.seed+'_snr'+state.snr+'dB.csv';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);});
 
 /* ---- hover, cursor, brush ---- */
 function tipHTML(n){const d=record(),g=gain(),ch=state.channel,L=[];L.push('<span class="k">n</span> '+n+'   <span class="k">t</span> '+(n/100).toFixed(2)+' µs');L.push('<span class="k">clean   </span> I '+fmt(d.clean[0][n],3)+'  Q '+fmt(d.clean[1][n],3));L.push('<span class="k">received</span> I '+fmt(current[0][n],3)+'  Q '+fmt(current[1][n],3));names.forEach((nm,k)=>{if(state.enabled[k])L.push('<span class="k">'+LABEL[nm].padEnd(8).slice(0,8)+'</span> I '+fmt(g*d[keys[k]][0][n],3)+'  Q '+fmt(g*d[keys[k]][1][n],3));});return L.join('\n');}
@@ -890,6 +905,19 @@ if(typeof ResizeObserver!=='undefined')new ResizeObserver(()=>{drawTime();drawSp
 
 /* ---- animation loop ---- */
 const motionNames=['Clean',...names],lengths={};
+function moveParticles(){
+  const svgs=Array.from(document.querySelectorAll('.scene svg')).filter(s=>s.getClientRects().length);
+  for(const svg of svgs)motionNames.forEach((n,k)=>{
+    try{
+      const path=svg.querySelector('[data-wire="'+n+'"]'),dot=svg.querySelector('[data-particle="'+n+'"]');
+      if(!path||!dot)return;
+      const key=svg.className.baseVal+n,length=lengths[key]||(lengths[key]=path.getTotalLength());
+      const stageStart=k*3.5,local=Math.max(0,state.t-stageStart);
+      const p=path.getPointAtLength(((elapsed*.24+k*.19)%1)*length);
+      dot.setAttribute('cx',p.x);dot.setAttribute('cy',p.y);dot.style.opacity=(k===0||state.enabled[k-1])&&local>0&&(state.inspect==='All'||state.inspect===n)?'1':'0';
+    }catch(error){}
+  });
+}
 function frame(now){
   let dt=Math.min(.1,(now-last)/1000);last=now;
   if(state.playing&&!document.hidden){
@@ -901,20 +929,7 @@ function frame(now){
       if(next!==state.stage){let t=state.t;setStage(next);state.t=t;}
     }
     progress();
-    if(!reduced.matches&&sceneVisible){
-      elapsed+=dt;
-      const svgs=Array.from(document.querySelectorAll('.scene svg')).filter(s=>s.getClientRects().length);
-      for(const svg of svgs)motionNames.forEach((n,k)=>{
-        try{
-          const path=svg.querySelector('[data-wire="'+n+'"]'),dot=svg.querySelector('[data-particle="'+n+'"]');
-          if(!path||!dot)return;
-          const key=svg.className.baseVal+n,length=lengths[key]||(lengths[key]=path.getTotalLength());
-          const stageStart=k*3.5,local=Math.max(0,state.t-stageStart);
-          const p=path.getPointAtLength(((elapsed*.24+k*.19)%1)*length);
-          dot.setAttribute('cx',p.x);dot.setAttribute('cy',p.y);dot.style.opacity=(k===0||state.enabled[k-1])&&local>0&&(state.inspect==='All'||state.inspect===n)?'1':'0';
-        }catch(error){}
-      });
-    }
+    if(!reduced.matches&&sceneVisible){elapsed+=dt;moveParticles();}
   }
   requestAnimationFrame(frame);
 }
@@ -926,6 +941,8 @@ if(typeof IntersectionObserver!=='undefined'){
 }else if(state.waiting){state.waiting=false;state.playing=true;update();}
 document.addEventListener('visibilitychange',()=>{last=performance.now();syncPlay();});
 requestAnimationFrame(frame);
+// Deterministic timeline control used by scripts/record_observatory_gifs.py; not part of the UI.
+window.brsrPage={duration:14,setTime(t){state.waiting=false;state.playing=false;const s=Math.min(3,Math.floor(t/3.5));if(s!==state.stage)setStage(s);state.t=t;elapsed=t;state.playing=true;document.body.classList.add('motion-running');updateDiagram();moveParticles();progress();$('modeLabel').textContent='GUIDED REVEAL';$('playbackNote').textContent='Playing · repeats automatically. Pause or choose a stage to explore.';$('playText').textContent='Pause';$('playIcon').setAttribute('d','M4 2v10M10 2v10');$('playIcon').setAttribute('fill','none');state.playing=false;},setWaveform(name,sample){setWaveform(name,false);state.sample=sample||0;setWaveform(name,false);}};
 </script>
 </body>
 </html>

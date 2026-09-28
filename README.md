@@ -10,9 +10,9 @@
 This is the generator of the **BRSR benchmark** (Blind Radar Signal Restoration), used in **BRSR-OpGAN**, **CoRe-Net** and **XCoRe-Net**. It comes in two equivalent implementations: **MATLAB** (no toolboxes needed) and **Python** (NumPy). Both write HDF5 files in the same layout as the published benchmark, so the output works directly with the [BRSR-OpGAN code](https://github.com/MUzairZahid/BRSR-OpGAN).
 
 <p align="center">
-  <img src="docs/figures/corruption_buildup.gif" width="860" alt="A clean LFM radar signal corrupted step by step by echo, co-channel interference and noise">
+  <img src="docs/figures/radar_environment.gif" width="900" alt="Radar environment: a radar emitter sends a clean LFM waveform to a receiver; an echo arrives via a reflector, an interfering emitter adds co-channel interference, and the receiver adds noise">
 </p>
-<p align="center"><em>The BRSR signal model: echo, co-channel interference and noise are added to a clean waveform (top: I channel; bottom: spectrogram).</em></p>
+<p align="center"><em>The radar environment behind the BRSR signal model. A clean waveform reaches the receiver on the direct path. A reflector adds a delayed echo, another emitter adds co-channel interference, and the receiver adds noise. The received signal and its spectrogram below are real generator output.</em></p>
 
 > **Looking for the BRSR benchmark itself?** Download it from Zenodo: [DOI 10.5281/zenodo.23010395](https://doi.org/10.5281/zenodo.23010395). The published files are the benchmark. This generator produces *new* data with the same process. It does not re-create the published files, because the original generation was not seeded.
 
@@ -58,7 +58,7 @@ See `matlab/examples/` for a small dataset and a plot of one signal and its arti
 
 ## Waveform classes
 
-<p align="center"><img src="docs/figures/waveform_gallery.png" width="900" alt="Spectrograms of the 12 LPI radar waveform classes: LFM, Costas, BPSK, Frank, P1, P2, P3, P4, T1, T2, T3, T4"></p>
+<p align="center"><img src="docs/figures/waveform_gallery.png" width="900" alt="The 12 LPI radar waveform classes (LFM, Costas, BPSK, Frank, P1, P2, P3, P4, T1, T2, T3, T4): a short I/Q waveform piece and the spectrogram of each"></p>
 
 All signals are complex baseband at fs = 100 MHz. Parameters are drawn from the ranges of the BRSR generator:
 
@@ -84,6 +84,9 @@ For each clean waveform `x` (BRSR-OpGAN paper, Section 3):
    - **Echo**: a delayed copy of the same waveform, `x(t − τ)`, with τ ∈ [128, 512] samples. The waveform is generated 2× longer so the delayed copy is real signal, not padding.
    - **CCI**: one of 50 interference signals (`interference_bank`).
 4. `noisy = clean + AWGN + echo + CCI`. The individual components are stored as well.
+
+<p align="center"><img src="docs/figures/corruption_buildup.gif" width="860" alt="A clean LFM and a Costas radar signal corrupted step by step by echo, co-channel interference and noise"></p>
+<p align="center"><em>The same steps on the signal itself: echo, interference and noise added one by one (top: I channel; bottom: spectrogram).</em></p>
 
 <p align="center"><img src="docs/figures/compositions.png" width="900" alt="The 7 artifact compositions: AWGN, echo, CCI, AWGN+echo, AWGN+CCI, echo+CCI and all three"></p>
 

@@ -22,8 +22,8 @@ Generate synthetic complex I/Q signals for the **Blind Radar Signal Restoration 
 <p align="center">
   <a href="https://muzairzahid.github.io/BRSR-DataGen/signal_observatory.html">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="docs/figures/observatory/observatory_hero_dark.png">
-      <img src="docs/figures/observatory/observatory_hero_light.png" width="960" alt="Signal Observatory: an interactive radar environment with a transmitter, illustrative reflector, interferer and receiver noise feeding one receiver, beside a control panel for target SNR and component switches. Open the page to explore all 12 classes and compare clean and received signals.">
+      <source media="(prefers-color-scheme: dark)" srcset="docs/figures/observatory/observatory_scene_dark.gif">
+      <img src="docs/figures/observatory/observatory_scene_light.gif" width="800" alt="Animated radar environment for one real LFM generator sample: the clean pulse, benchmark echo, co-channel interference and AWGN are revealed in four stages. The paths are illustrative.">
     </picture>
   </a>
 </p>
@@ -34,8 +34,8 @@ Explore **all 12 waveform classes**, with **three seeded observations per class*
 <p align="center">
   <a href="https://muzairzahid.github.io/BRSR-DataGen/signal_observatory.html">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="docs/figures/observatory/observatory_compare_dark.png">
-      <img src="docs/figures/observatory/observatory_compare_light.png" width="960" alt="Clean target and received input for the same LFM sample: waveforms with matched axes above spectrograms with a shared colour scale, and measured SNR, artifact-to-clean power, echo offset and interference-bank row below.">
+      <source media="(prefers-color-scheme: dark)" srcset="docs/figures/observatory/observatory_compare_dark.gif">
+      <img src="docs/figures/observatory/observatory_compare_light.gif" width="800" alt="Animated clean and received waveforms and spectrograms for the same LFM sample as the radar scene. The received input gains echo, interference and noise while the clean target remains the reference; the final measured SNR is −2.94 dB.">
     </picture>
   </a>
 </p>

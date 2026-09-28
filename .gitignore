@@ -6,3 +6,8 @@ __pycache__/
 *.egg-info/
 build/
 .pytest_cache/
+
+
+/README_v2.md
+
+/docs/index_v2.html

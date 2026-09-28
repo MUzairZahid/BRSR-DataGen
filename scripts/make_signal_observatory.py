@@ -1,4 +1,4 @@
-"""Build the separate Signal Observatory without modifying the original animation.
+"""Generate the reproducible Signal Observatory sample library.
 
 Requires only NumPy. Run: python scripts/make_signal_observatory.py
 The embedded records are generated here, not invented in the browser. Browser
@@ -76,14 +76,9 @@ def build_data():
 
 
 def build():
-    data = build_data()
-    print(f'Verified {sum(map(len, data["records"].values()))} observations across {len(data["records"])} classes.')
-    template = (ROOT / 'scripts' / 'signal_observatory_template.html').read_text(encoding='utf-8')
-    html = template.replace('__SIGNAL_DATA__', json.dumps(data, separators=(',', ':')))
-    assert '__SIGNAL_DATA__' not in html
-    out = ROOT / 'docs' / 'signal_observatory.html'
-    out.write_text(html, encoding='utf-8', newline='\n')
-    print(f'Built {out} ({len(html):,} characters). Original animation untouched.')
+    # Preserve the established command while using the current public renderer.
+    import runpy
+    runpy.run_path(str(ROOT / 'scripts' / 'make_observatory_v2.py'), run_name='__main__')
 
 
 if __name__ == '__main__':

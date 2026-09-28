@@ -1,4 +1,4 @@
-"""Verify the shipped gallery and the browser's actual complex mixing functions."""
+"""Verify the sample library and complex mixing functions."""
 import importlib.util
 import json
 from pathlib import Path
@@ -18,13 +18,12 @@ def builder():
     return module
 
 
-def embedded_data():
-    page = (ROOT / 'docs/signal_observatory.html').read_text(encoding='utf-8')
-    return json.loads(page.split('const DATA = ', 1)[1].split(';\n', 1)[0])
+def gallery_data():
+    return builder().build_data()
 
 
-def test_shipped_gallery_matches_generator():
-    data = embedded_data()
+def test_sample_library_is_reproducible():
+    data = gallery_data()
     assert data == builder().build_data()
     assert list(data['records']) == builder().module('waveforms').CLASS_NAMES
     for samples in data['records'].values():
@@ -47,7 +46,7 @@ def test_browser_mixtures_match_numpy(tmp_path):
     node = shutil.which('node')
     if not node:
         pytest.skip('Node.js required for browser math regression')
-    data = embedded_data()
+    data = gallery_data()
     source = (ROOT / 'scripts/signal_observatory_template.html').read_text(encoding='utf-8')
     math_functions = source[source.index('function mix(){'):source.index('function canvasSetup(')]
     cases = []

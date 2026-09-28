@@ -183,7 +183,7 @@ def corruption_buildup(rng, bank):
                 frames.append((stage, f"+ {label}", acc + (k + 1) / 6 * comps[c]))
             acc = acc + comps[c]
             frames += [(stage, f"+ {label}", acc)] * 3
-        frames += [(4, f"Received signal · SNR {fmt_db(snr)} dB · echo delay {info['echo_delay']} samples", acc)] * 20
+        frames += [(4, f"Received · target SNR {fmt_db(snr)} dB · echo source offset +{info['echo_delay']}", acc)] * 20
         for stage, title, z in frames:
             fig.clf()
             gs = fig.add_gridspec(3, 1, height_ratios=[0.34, 1.0, 1.15], hspace=0.55, left=0.08, right=0.83,

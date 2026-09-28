@@ -5,7 +5,7 @@ An independent redesign of the radar-environment animation. Open
 self-contained page and also works without a server or an internet connection.
 
 The original `radar_environment.html`, its builder, template and GIF are preserved.
-The new page links back to the original. It has not replaced the README animation.
+The new page links back to the original. The README keeps the original in an expandable section.
 
 ## Explore
 
@@ -19,7 +19,7 @@ The new page links back to the original. It has not replaced the README animatio
 
 The mobile layout stacks component cards and charts. Buttons and the range control
 support keyboard navigation. Reduced-motion preference starts with a paused final
-sample; playback runs once and stops instead of looping indefinitely.
+sample with looping disabled. Otherwise playback begins when the diagram enters view and repeats; use Loop off for a single pass. Any stage, SNR or component adjustment pauses the guided reveal. A visible startup notice remains if scripts cannot initialize.
 
 ## Build
 

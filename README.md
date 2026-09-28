@@ -7,7 +7,7 @@
 
 **BRSR-DataGen** generates paired clean/corrupted **radar signal datasets** for **radar signal restoration, denoising, interference suppression and modulation recognition**. It produces **12 LPI radar waveforms** (LFM, Costas, Barker BPSK, Frank, P1–P4 polyphase codes and T1–T4 polytime codes) as complex I/Q signals. It corrupts them with random blends of **additive white Gaussian noise (AWGN)**, **echo** and **co-channel interference (CCI)** at a chosen SNR.
 
-This is the generator of the **BRSR benchmark** (Blind Radar Signal Restoration), used in **BRSR-OpGAN**, **CoRe-Net** and **XCoRe-Net**. It comes in two equivalent implementations: **MATLAB** (no toolboxes needed) and **Python** (NumPy). Both write HDF5 files in the same layout as the published benchmark, so the output works directly with the [BRSR-OpGAN code](https://github.com/MUzairZahid/BRSR-OpGAN).
+This is the generator of the **BRSR benchmark** (Blind Radar Signal Restoration), used in **BRSR-OpGAN** and **CoRe-Net**. It comes in two equivalent implementations: **MATLAB** (no toolboxes needed) and **Python** (NumPy). Both write HDF5 files in the same layout as the published benchmark, so the output works directly with the [BRSR-OpGAN code](https://github.com/MUzairZahid/BRSR-OpGAN).
 
 <p align="center">
   <a href="https://muzairzahid.github.io/BRSR-DataGen/radar_environment.html"><img src="docs/figures/radar_environment.gif" width="900" alt="Radar environment animation: an emitter sends a clean LFM radar pulse to a receiver; a building reflects a delayed echo, a second emitter adds co-channel interference and the receiver adds noise, while the received waveform and its spectrogram build up"></a>
@@ -183,7 +183,6 @@ BRSR-DataGen/
 - **BRSR dataset** (the published benchmark): [Zenodo, DOI 10.5281/zenodo.23010395](https://doi.org/10.5281/zenodo.23010395)
 - **BRSR-OpGAN** code and pre-trained models: [github.com/MUzairZahid/BRSR-OpGAN](https://github.com/MUzairZahid/BRSR-OpGAN)
 - **CoRe-Net**: Co-Operational Regressor Network with Progressive Transfer Learning for Blind Radar Signal Restoration, *Machine Learning with Applications* 25, 100939 (2026). [doi:10.1016/j.mlwa.2026.100939](https://doi.org/10.1016/j.mlwa.2026.100939)
-- **XCoRe-Net**: Expert Co-Operational Regressor Networks for High-Fidelity Restoration of Radar Signals.
 
 ## Citation
 
@@ -216,4 +215,4 @@ MIT (see [LICENSE](LICENSE)).
 
 ---
 
-**Keywords:** radar signal generator, radar dataset generator, LPI radar waveforms, radar waveform dataset, LFM, Costas code, Barker code, BPSK, Frank code, P1 P2 P3 P4 polyphase codes, T1 T2 T3 T4 polytime codes, I/Q signals, AWGN, echo, co-channel interference, radar signal restoration, radar signal denoising, blind radar signal restoration, BRSR dataset, BRSR-OpGAN, CoRe-Net, XCoRe-Net, MATLAB, Python.
+**Keywords:** radar signal generator, radar dataset generator, LPI radar waveforms, radar waveform dataset, LFM, Costas code, Barker code, BPSK, Frank code, P1 P2 P3 P4 polyphase codes, T1 T2 T3 T4 polytime codes, I/Q signals, AWGN, echo, co-channel interference, radar signal restoration, radar signal denoising, blind radar signal restoration, BRSR dataset, BRSR-OpGAN, CoRe-Net, MATLAB, Python.

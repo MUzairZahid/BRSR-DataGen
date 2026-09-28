@@ -20,11 +20,11 @@ Generate synthetic complex I/Q signals for the **Blind Radar Signal Restoration 
 ## Explore the Signal Observatory
 
 <p align="center">
-  <a href="https://muzairzahid.github.io/BRSR-DataGen/signal_observatory.html"><img src="docs/figures/signal_observatory_preview.png" width="960" alt="Signal Observatory: real clean, benchmark echo, interference and noise components feed an additive sum, with an SNR slider and independent component controls."></a>
+  <a href="https://muzairzahid.github.io/BRSR-DataGen/signal_observatory.html"><img src="docs/figures/signal_observatory_preview.png" width="960" alt="Signal Observatory environment view with linked radar sources, corruption controls and guided playback. Open the page to explore all 12 classes and compare clean and received signals."></a>
 </p>
 <p align="center"><strong><a href="https://muzairzahid.github.io/BRSR-DataGen/signal_observatory.html">Open the interactive Signal Observatory →</a></strong></p>
 
-Switch between **LFM, Costas and BPSK**, reveal each component, adjust the target SNR, and compare the resulting waveform and spectrogram. The view uses real generator output and reports the **measured SNR** of the current mixture. The controls rescale fixed sample realizations; they do not invent signals or model propagation geometry.
+Explore **all 12 waveform classes**, with **three seeded observations per class**. An animated radar scene and side-by-side **clean / received** waveforms and spectrograms show the same sample. Select a source to highlight its contribution in both views, adjust the target SNR, switch I/Q channels, or inspect the full observation. The view uses real generator output and reports the **measured SNR** of the current mixture. The scene is a conceptual illustration of the additive model; its paths do not determine physical delays or signal gains. Controls rescale fixed generator realizations, and **Next sample** cycles through the three stored observations.
 
 The page works on desktop and mobile, supports keyboard controls and reduced motion, and runs as a self-contained HTML file. See [data provenance and build instructions](docs/SIGNAL_OBSERVATORY.md).
 

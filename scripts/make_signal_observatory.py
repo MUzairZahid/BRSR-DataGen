@@ -20,7 +20,7 @@ def module(name):
     return result
 
 
-def build():
+def build_data():
     w, a = module('waveforms'), module('artifacts')
     fs, n = 100e6, 2048
     hops = [1, 2, 4, 3]
@@ -34,25 +34,50 @@ def build():
         'BPSK': (107, 'Binary phase-shift keying', 'Barker-13 · linearly resampled',
                  lambda rng: w.resample_linear(w.type_Barker(20, fs, 1, 8.8e6, 13), n)),
     }
+    # Use the same waveform functions and resampling as generator.make_waveform.
+    # Parameters are explicit, within the benchmark ranges, and recorded below.
+    for name in ('Frank', 'P1', 'P2', 'P3', 'P4'):
+        count = 36 if name in ('P3', 'P4') else 6
+        examples[name] = (211 + len(examples), name + ' polyphase code',
+                          f'{count} ' + ('subcodes' if count == 36 else 'steps') + ' · 4 cycles per chip · 18 MHz carrier',
+                          lambda rng, name=name, count=count: w.resample_linear(
+                              getattr(w, 'type_' + name)(4, fs, 1, 18e6, count), n))
+    for name in ('T1', 'T2'):
+        examples[name] = (311 + len(examples), name + ' time code',
+                          '5 segments · 2 phase states · 18 MHz carrier',
+                          lambda rng, name=name: w.resample_linear(
+                              getattr(w, 'type_' + name)(fs, 1, 18e6, 2, 5), n))
+    for name in ('T3', 'T4'):
+        examples[name] = (411 + len(examples), name + ' time code',
+                          '2 phase states · 8.8 MHz carrier · 7.5 MHz bandwidth',
+                          lambda rng, name=name: getattr(w, 'type_' + name)(n, fs, 1, 8.8e6, 2, 7.5e6))
     records = {}
     bank = a.load_interference_bank()
     pack = lambda z: [np.round(z.real, 8).tolist(), np.round(z.imag, 8).tolist()]
-    for name, (seed, title, subtitle, make) in examples.items():
-        rng = np.random.default_rng(seed)
-        clean, noisy, components, info = a.add_artifacts(make(rng), -3, bank, rng,
-                                                       composition=('AWGN', 'Echo', 'CCI'))
-        scale = np.sqrt(np.mean(np.abs(clean)**2))
-        assert np.allclose(noisy, clean + components.sum(axis=0))
-        power = np.mean(np.abs(components)**2, axis=1)
-        weights = np.array([info['w_awgn'], info['w_echo'], info['w_cci']])
-        assert np.allclose(power / scale**2, weights * 10**.3)
-        records[name] = dict(title=title, subtitle=subtitle, seed=seed, clean=pack(clean/scale),
-                             noise=pack(components[0]/scale), echo=pack(components[1]/scale),
-                             cci=pack(components[2]/scale), weights=weights.tolist(),
-                             offset=info['echo_delay'], start=info['segment_start'],
-                             bankRow=info['cci_bank_row'], originalRms=float(scale))
-        print(f'{name}: verified 1024 complex samples, seed {seed}, offset {info["echo_delay"]}')
-    data = dict(fs=fs, baseSnr=-3, bankSize=len(bank), records=records)
+    for name, (base_seed, title, subtitle, make) in examples.items():
+        records[name] = []
+        # Three independent seeded observations of each waveform configuration.
+        for sample in range(3):
+            seed = base_seed + sample * 1000
+            rng = np.random.default_rng(seed)
+            clean, noisy, components, info = a.add_artifacts(make(rng), -3, bank, rng,
+                                                           composition=('AWGN', 'Echo', 'CCI'))
+            scale = np.sqrt(np.mean(np.abs(clean)**2))
+            assert np.allclose(noisy, clean + components.sum(axis=0))
+            power = np.mean(np.abs(components)**2, axis=1)
+            weights = np.array([info['w_awgn'], info['w_echo'], info['w_cci']])
+            assert np.allclose(power / scale**2, weights * 10**.3)
+            records[name].append(dict(title=title, subtitle=subtitle, seed=seed, clean=pack(clean/scale),
+                                 noise=pack(components[0]/scale), echo=pack(components[1]/scale),
+                                 cci=pack(components[2]/scale), weights=weights.tolist(),
+                                 offset=info['echo_delay'], start=info['segment_start'],
+                                 bankRow=info['cci_bank_row'], originalRms=float(scale)))
+    return dict(fs=fs, baseSnr=-3, bankSize=len(bank), records=records)
+
+
+def build():
+    data = build_data()
+    print(f'Verified {sum(map(len, data["records"].values()))} observations across {len(data["records"])} classes.')
     template = (ROOT / 'scripts' / 'signal_observatory_template.html').read_text(encoding='utf-8')
     html = template.replace('__SIGNAL_DATA__', json.dumps(data, separators=(',', ':')))
     assert '__SIGNAL_DATA__' not in html
